@@ -9,8 +9,8 @@ export const dbConnect = async (req: any, res:Response, next:NextFunction) => {
         {useUnifiedTopology: true}
     );
     const db = client.db("taric");
-    console.log(req.context);
-    // req.ctx = {};
-    // req.ctx['db'] = db;
+    req.ctx = {};
+    req.ctx['datetime'] = new Date();
+    req.ctx['db'] = db;
     await next();
 };
