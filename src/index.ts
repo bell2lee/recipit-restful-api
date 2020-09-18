@@ -1,14 +1,16 @@
 import express, {Request, Response, NextFunction} from 'express';
 import fs from 'fs';
 import {dbConnect} from './middleware/db';
+import {errorHandler} from "./middleware/errorHandler";
 
 export type RestAPIMethod = 'get'|'post'|'patch'|'options'|'put';
 
 function main(){
     const app = express();
     app.use(express.json());
-
     app.use(dbConnect);
+    app.use(errorHandler);
+
     fs.readdir('./src/api', function(err, filelist){
         filelist.forEach(file => {
             const routeName = file.replace('.ts', '');
