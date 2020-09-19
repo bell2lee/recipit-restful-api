@@ -18,12 +18,24 @@ const user = [
         method: 'post',
         handler: async function(req:any, res:Response, next: NextFunction){
             await User.createUser(req.ctx, {
-                ...req.body
+                ...req.body,
             });
             res.status(200);
             res.json({msg: "test"})
         },
     },
+    {
+        url: '/',
+        method: 'patch',
+        handler: async function(req:any, res:Response, next: NextFunction){
+            await User.updateUser(req.ctx, {
+                ...req.body,
+            });
+            res.status(200);
+            res.json({msg: "test"})
+        },
+    },
+
 ]
 
 module.exports = user;

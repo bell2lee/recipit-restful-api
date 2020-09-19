@@ -9,7 +9,7 @@ enum CollectionName {
     user="User",
 }
 
-export function createUser(
+export async function createUser(
     ctx: any,
     args: {
         username: UserName,
@@ -20,7 +20,7 @@ export function createUser(
         isAdmin?: boolean,
     })
 {
-    ctx.db.collection(CollectionName.user).insertOne({
+    await ctx.db.collection(CollectionName.user).insertOne({
         username: args.username,
         password: args.password,
         name: args.name,
@@ -30,7 +30,37 @@ export function createUser(
     });
 }
 
-export function updateUser(){
+export async function updateUser(
+    ctx: any,
+    args: {
+        id: mongo.ObjectId,
+        username?: UserName,
+        password?: PassWord,
+        name?: Name,
+        email?: Email,
+        isActive?: boolean,
+        isAdmin?: boolean,
+    }
+){
+    let updateFields:any = {};
+    Object.entries(args).forEach((field:any) => {
+        updateFields = {
+            ...updateFields,
+            ...(field[0] === 'id') ?
+                {'_id': new mongo.ObjectId(field[1])}:
+                {[field[0]]: field[1]},
+        };
+    });
+    console.log(updateFields)
+    try{
+        await ctx.db.collection(CollectionName.user).updateOne({_id: new mongo.ObjectId(updateFields.id)}, {
+            $set: {
+                ...updateFields
+            }
+        });
+    }catch (e){
+        throw(new HttpError(500, "error"));
+    }
 
 }
 
