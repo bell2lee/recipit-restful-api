@@ -46,32 +46,47 @@ export async function updateUser(
     Object.entries(args).forEach((field:any) => {
         updateFields = {
             ...updateFields,
-            ...(field[0] === 'id') ?
-                {'_id': new mongo.ObjectId(field[1])}:
-                {[field[0]]: field[1]},
+            [field[0]]: field[1],
         };
     });
-    console.log(updateFields)
-    try{
-        await ctx.db.collection(CollectionName.user).updateOne({_id: new mongo.ObjectId(updateFields.id)}, {
-            $set: {
-                ...updateFields
-            }
-        });
-    }catch (e){
-        throw(new HttpError(500, "error"));
+    return await ctx.db.collection(CollectionName.user).updateOne({_id: new mongo.ObjectId(updateFields.id)}, {
+        $set: {
+            ...updateFields
+        }
+    });
+
+}
+
+export async function readUser(
+    ctx: any,
+    args: {
+        id: mongo.ObjectId,
     }
-
+)
+{
+    return await ctx.db.collection(CollectionName.user).findOne({
+        _id: args.id,
+        isDeleted: {$not: {$eq: true}},
+    });
 }
 
-export function readUser(){
-
+export async function readUsers(
+    ctx: any,
+){
+    return await ctx.db.collection(CollectionName.user).find({
+        isDeleted: {$not: {$eq: true}},
+    }).toArray();
 }
 
-export function readUsers(){
-
-}
-
-export function deleteUser(){
-
+export async function deleteUser(
+    ctx: any,
+    args: {
+        id: mongo.ObjectId,
+    }
+){
+    await ctx.db.collection(CollectionName.user).updateOne({_id: args.id}, {
+        $set: {
+            isDeleted: true,
+        }
+    })
 }
