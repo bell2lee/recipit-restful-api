@@ -27,12 +27,12 @@ const user = [
         },
     },
     {
-        url: '/',
+        url: '/:id',
         method: 'patch',
         handler: async function(req:any, res:Response, next: NextFunction){
             await User.updateUser(req.ctx, {
                 ...req.body,
-                id: new mongo.ObjectId(req.body),
+                id: new mongo.ObjectId(new mongo.ObjectId(req.params['id'])),
             });
             res.status(200);
             res.json({msg: "test"})

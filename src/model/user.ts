@@ -42,16 +42,14 @@ export async function updateUser(
         isAdmin?: boolean,
     }
 ){
-    let updateFields:any = {};
-    Object.entries(args).forEach((field:any) => {
-        updateFields = {
-            ...updateFields,
-            [field[0]]: field[1],
-        };
-    });
-    return await ctx.db.collection(CollectionName.user).updateOne({_id: new mongo.ObjectId(updateFields.id)}, {
+    return await ctx.db.collection(CollectionName.user).updateOne({_id: args.id}, {
         $set: {
-            ...updateFields
+            ...(args.username !== undefined) ? {username: args.username} : {},
+            ...(args.password !== undefined) ? {password: args.password} : {},
+            ...(args.name !== undefined) ? {name: args.name} : {},
+            ...(args.email !== undefined) ? {email: args.email} : {},
+            ...(args.isActive !== undefined) ? {isActive: args.isActive} : {},
+            ...(args.isAdmin !== undefined) ? {isAdmin: args.isAdmin} : {},
         }
     });
 
