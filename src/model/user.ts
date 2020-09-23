@@ -9,7 +9,7 @@ enum CollectionName {
     user="User",
 }
 
-export function createUser(
+export async function createUser(
     ctx: any,
     args: {
         username: UserName,
@@ -20,7 +20,7 @@ export function createUser(
         isAdmin?: boolean,
     })
 {
-    ctx.db.collection(CollectionName.user).insertOne({
+    await ctx.db.collection(CollectionName.user).insertOne({
         username: args.username,
         password: args.password,
         name: args.name,
@@ -30,18 +30,61 @@ export function createUser(
     });
 }
 
-export function updateUser(){
+export async function updateUser(
+    ctx: any,
+    args: {
+        id: mongo.ObjectId,
+        username?: UserName,
+        password?: PassWord,
+        name?: Name,
+        email?: Email,
+        isActive?: boolean,
+        isAdmin?: boolean,
+    }
+){
+    return await ctx.db.collection(CollectionName.user).updateOne({_id: args.id}, {
+        $set: {
+            ...(args.username !== undefined) ? {username: args.username} : {},
+            ...(args.password !== undefined) ? {password: args.password} : {},
+            ...(args.name !== undefined) ? {name: args.name} : {},
+            ...(args.email !== undefined) ? {email: args.email} : {},
+            ...(args.isActive !== undefined) ? {isActive: args.isActive} : {},
+            ...(args.isAdmin !== undefined) ? {isAdmin: args.isAdmin} : {},
+        }
+    });
 
 }
 
-export function readUser(){
-
+export async function readUser(
+    ctx: any,
+    args: {
+        id: mongo.ObjectId,
+    }
+)
+{
+    return await ctx.db.collection(CollectionName.user).findOne({
+        _id: args.id,
+        isDeleted: {$not: {$eq: true}},
+    });
 }
 
-export function readUsers(){
-
+export async function readUsers(
+    ctx: any,
+){
+    return await ctx.db.collection(CollectionName.user).find({
+        isDeleted: {$not: {$eq: true}},
+    }).toArray();
 }
 
-export function deleteUser(){
-
+export async function deleteUser(
+    ctx: any,
+    args: {
+        id: mongo.ObjectId,
+    }
+){
+    await ctx.db.collection(CollectionName.user).updateOne({_id: args.id}, {
+        $set: {
+            isDeleted: true,
+        }
+    })
 }
