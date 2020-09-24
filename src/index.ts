@@ -6,9 +6,11 @@ import {errorHandler} from "./middleware/errorHandler";
 export type RestAPIMethod = 'get'|'post'|'patch'|'options'|'put';
 
 function main(){
+    const authConfig = require(__dirname + '/../config/auth.config.json');
     const app = express();
     app.use(express.json());
     app.use(dbConnect);
+    app.set('jwt-secret', authConfig['secret'])
     app.use(errorHandler);
 
     fs.readdir('./src/api', function(err, filelist){

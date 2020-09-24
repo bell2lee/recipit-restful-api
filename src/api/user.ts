@@ -2,6 +2,7 @@ import {NextFunction, Request, Response, Router} from "express";
 import mongo from "mongodb";
 import {HttpError} from "../middleware/errorHandler";
 import * as User from "../model/user";
+import * as UserLib from "../lib/user";
 
 const userCollectionName = 'User';
 
@@ -18,12 +19,11 @@ const user = [
         url: '/',
         method: 'post',
         handler: async function(req:any, res:Response, next: NextFunction){
-            await User.createUser(req.ctx, {
+            await UserLib.signup(req.ctx, {
                 ...req.body,
-                id: new mongo.ObjectId(req.body),
             });
             res.status(200);
-            res.json({msg: "test"})
+            res.json({msg: "test"});
         },
     },
     {

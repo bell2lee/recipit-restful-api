@@ -16,8 +16,8 @@ export async function createUser(
         password: PassWord,
         name: Name,
         email: Email,
-        isActive?: boolean,
-        isAdmin?: boolean,
+        isActive: boolean,
+        isAdmin: boolean,
     })
 {
     await ctx.db.collection(CollectionName.user).insertOne({
@@ -25,8 +25,8 @@ export async function createUser(
         password: args.password,
         name: args.name,
         email: args.email,
-        isActive: true,
-        isAdmin: false,
+        isActive: args.isActive,
+        isAdmin: args.isAdmin,
     });
 }
 
