@@ -6,9 +6,20 @@ export function makePassword(password: User.PassWord){
     return crypto.createHash('sha256').update(password + securityConfig.secret).digest('base64');
 }
 
-export async function signin(username: User.UserName, password: User.PassWord){
-    return makePassword(password);
-    //secret
+export async function verificationUser(
+    ctx: any,
+    args: {
+        username: User.UserName,
+        password: User.PassWord,
+    },
+){
+    let user = await User.readUser(ctx,{
+        username: args.username,
+        password: makePassword(args.password),
+    });
+    delete user.password;
+
+    return user;
 }
 
 export async function signup(ctx: any, args: {

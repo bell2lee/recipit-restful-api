@@ -58,12 +58,16 @@ export async function updateUser(
 export async function readUser(
     ctx: any,
     args: {
-        id: mongo.ObjectId,
+        id?: mongo.ObjectId,
+        username?: UserName,
+        password?: PassWord,
     }
 )
 {
     return await ctx.db.collection(CollectionName.user).findOne({
-        _id: args.id,
+        ...(args.id !== undefined) ?  {_id: args.id} : {},
+        ...(args.username !== undefined) ? {username: args.username} : {},
+        ...(args.password !== undefined) ? {password: args.password} : {},
         isDeleted: {$not: {$eq: true}},
     });
 }

@@ -18,9 +18,8 @@ const auth = [
         method: 'post',
         handler: async function(req:any, res:Response, next: NextFunction){
             const [username, password] = [req.body.username, req.body.password];
-            // console.log(await UserLib.login(username, password));
-            // console.log(username, password);
-            res.json({msg:'ok'});
+            const user = await UserLib.verificationUser(req.ctx, {username, password});
+            res.json(user);
         },
     },
 ]
