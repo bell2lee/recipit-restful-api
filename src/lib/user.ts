@@ -1,6 +1,7 @@
 import * as User from '../model/user';
 const securityConfig = require(__dirname + '/../../config/security.config.json');
 import crypto from 'crypto';
+import {HttpError} from "../middleware/errorHandler";
 
 export function makePassword(password: User.PassWord){
     return crypto.createHash('sha256').update(password + securityConfig.secret).digest('base64');
@@ -20,6 +21,9 @@ export async function verificationUser(
     delete user.password;
 
     return user;
+
+
+
 }
 
 export async function signup(ctx: any, args: {

@@ -10,10 +10,7 @@ export class HttpError {
     }
 }
 
-export const errorHandler = async (req: Request, res:Response, next:NextFunction) => {
-    try{
-        await next();
-    }catch(e){
-        console.log(e);
-    }
-};
+export function errorHandler(err: any, req: any, res: any, next: any) {
+    console.log("!");
+    res.status(err.status !== undefined ? 500 : err.status).json({msg: err.msg});
+}
