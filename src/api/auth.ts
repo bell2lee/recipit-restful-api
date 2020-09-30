@@ -12,11 +12,11 @@ const auth = [
         handler: async function(req:any, res:Response, next: NextFunction){
             // const members = await User.readUsers(req.ctx);
 
-            // throw(new HttpError(500, "TEST"));
-            res.status(500);
-            res.json({test:"TEST"});
+            throw(new HttpError(200, "TEST"));
+            // throw {msg:'test', status:500};
+            // res.status(200).json({msg: 'ewq'});
+            // res.json({test:"TEST"});
             // throw(new Error("TESt"));
-            // res.json(members);
         },
     },
     {

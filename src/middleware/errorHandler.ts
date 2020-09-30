@@ -10,7 +10,19 @@ export class HttpError {
     }
 }
 
-export function errorHandler(err: any, req: any, res: any, next: any) {
-    console.log("!");
-    res.status(err.status !== undefined ? 500 : err.status).json({msg: err.msg});
+export function logErrors(err: any, req: any, res: any, next: any) {
+    console.error(err.stack);
+    console.error(err)
+    console.log("!!!!!!!!!!!!!!!!!!");
+    next(err);
+}
+
+export async function errorHandler(req: any, res: any, next: any) {
+    try{
+        await next();
+    }catch(e){
+        console.log("!");
+
+        res.status(e.status !== undefined ? 500 : e.status).json({msg: e.msg});
+    }
 }
